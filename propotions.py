@@ -60,27 +60,26 @@ datum.cvInputData = person1
 opWrapper.emplaceAndPop(op.VectorDatum([datum]))
 person1_keypoints = datum.poseKeypoints[0][1:9]
 
-p1_hands = person1_keypoints[1:7][:2]
-p1_neck = person1_keypoints[0][:2]
-p1_hip = person1_keypoints[7][:2]
+def scale_image(image, keypoints, target_distance_ox, target_distance_oy):
 
-p2_hands = person2_keypoints[1:7][:2]
-p2_neck = person2_keypoints[0][:2]
-p2_hip = person2_keypoints[7][:2]
+    current_distance_ox = abs(keypoints[1][0]-keypoints[4][0])
+    current_distance_oy = abs(keypoints[0][1]-keypoints[-1][1])
 
-propotions_neck_hip = np.linalg.norm(p1_neck - p2_hip) / np.linalg.norm(p2_neck - p2_hip)
-propotions_hands = np.linalg.norm(p1_hands)/np.linalg.norm(p2_hands)
+    scale_ratio_ox = target_distance_ox / current_distance_ox
+    scale_ratio_oy = target_distance_oy / current_distance_oy
 
-scaled_image = cv2.resize(person2, None, fx = propotions_hands, fy= propotions_hands)
+    scaled_image = cv2.resize(image, None, fx=scale_ratio_ox, fy=scale_ratio_oy)
+    scaled_keypoints = [(int(keypoint[0] * scale_ratio_ox), int(keypoint[1] * scale_ratio_oy)) for keypoint in keypoints]
+    
+    return scaled_image, scaled_keypoints
 
-new_neck_position = (int(p2_neck[0] * propotions_neck_hip), int(p2_neck[1] * propotions_neck_hip))
-new_hip_position = (int(p2_hip[0] * propotions_neck_hip), int(p2_hip[1] * propotions_neck_hip))
-offset_x = new_neck_position[0] - p2_neck[0]
-offset_y = new_neck_position[1] - p2_neck[0]
 
-M = np.float32([[1, 0, offset_x], [0, 1, offset_y]])
-translated_image = cv2.warpAffine(scaled_image, M, (person2.shape[1], person2.shape[0]))
+target_distance_ox = abs(person1_keypoints[1][0]-person1_keypoints[4][0])
+target_distance_oy = abs(person1_keypoints[0][1]-person1_keypoints[-1][1])
 
-cv2.imshow("result", translated_image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+scaled_image_person2, scaled_keypoints_person2 = scale_image(person2, person2_keypoints, target_distance_ox, target_distance_oy)
+                         
+
+
+
+cv2.imwrite("D:\Python37\Overlaying\output\\result.jpg", scaled_image_person2)
