@@ -30,7 +30,11 @@ def cut_top_clothes(image_path:str):
     for color in colors_to_extract_top:
         mask = cv2.inRange(color_mask, color, color)
         new_mask = cv2.bitwise_or(new_mask, mask)
-    result_cut = cv2.bitwise_and(image, image, mask = new_mask)
+    alpha_channel = new_mask.copy()
+    alpha_channel[alpha_channel>0] = 255
+    image = image.astype(np.uint8)
+
+    result_cut = cv2.merge((image[:,:,0], image[:,:,1], image[:,:,2], alpha_channel))
     cv2.imwrite("D:\Python37\Overlaying\output\cutted_clothes.png", result_cut)
 
 cut_top_clothes("D:\Python37\Overlaying\output\\result.jpg")
