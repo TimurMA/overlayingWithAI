@@ -38,6 +38,3 @@ def cut_top_clothes(image_path:str, output_mask_path:str, output_result_path:str
 
     result_cut = cv2.merge((image[:,:,0], image[:,:,1], image[:,:,2], alpha_channel))
     cv2.imwrite(output_result_path, result_cut)
-
-cut_top_clothes("D:\Python37\Overlaying\input\\6802df34.jpg", "D:\Python37\Overlaying\output\colored_mask.png", "D:\Python37\Overlaying\output\cutted_clothes.png")
-
