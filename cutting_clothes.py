@@ -18,7 +18,7 @@ def predictColoredMask(image):
 
 
 colors_to_extract_top = [(47, 167, 239), (56, 140, 255), (75, 115, 255), (87, 245, 135), (91, 240, 175), 
-                     (99, 94, 255), (125, 78, 255), (149, 67, 238), (167, 62, 210), (178, 60, 178)]
+                     (99, 94, 255), (125, 78, 255), (149, 67, 238), (167, 62, 210), (178, 60, 178), (169, 219, 28)]
 
 
 def cut_top_clothes(image_path:str, output_mask_path:str, output_result_path:str):
