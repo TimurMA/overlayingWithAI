@@ -8,6 +8,6 @@ def scale_image(image, keypoints, target_distance_ox, target_distance_oy):
     scale_ratio_ox = target_distance_ox / current_distance_ox
     scale_ratio_oy = target_distance_oy / current_distance_oy
 
-    scaled_image = cv2.resize(image, None, fx=scale_ratio_ox+0.5, fy=scale_ratio_oy+0.5)
+    scaled_image = cv2.resize(image, None, fx=scale_ratio_ox+0.05, fy=scale_ratio_oy+0.05)
     
     return scaled_image
