@@ -7,7 +7,7 @@ import numpy as np
 def predictColoredMask(image):
 
     bodypix_model = tfbd.load_model(tfbd.download_model(
-    tfbd.BodyPixModelPaths.MOBILENET_FLOAT_50_STRIDE_16
+    tfbd.BodyPixModelPaths.RESNET50_FLOAT_STRIDE_16
     ))
     image_np = tf.keras.preprocessing.image.img_to_array(image)
     result = bodypix_model.predict_single(image_np)
