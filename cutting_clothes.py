@@ -36,11 +36,11 @@ def cut_top_clothes(image, image_keypoints, person_keypoints, output_mask_path:s
     image = image.astype(np.uint8)
     result_cut = cv2.merge((image[:,:,0], image[:,:,1], image[:,:,2], alpha_channel))
 
-    
     scaled_neck = image_keypoints[0][:2]
     person1_neck = person_keypoints[0][:2]
     x = int(person1_neck[0] - scaled_neck[0])
     y = int(person1_neck[1] - scaled_neck[1])
+    
     bg_width = width
     bg_height = height
     if (y+result_cut.shape[0] > bg_height):
