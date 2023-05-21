@@ -3,6 +3,7 @@ from propotions import scale_image
 from cutting_clothes import cut_top_clothes
 import numpy as np
 import sys
+from urllib.request import urlopen
 import os, random
 from propotions import scale_image
 
@@ -29,9 +30,11 @@ def get_keypoints(image):
     return datum.poseKeypoints[0][1:9]
 
 
-def overlay(person_path):
+def overlay(person_URL):
 
-    person = cv2.imread(person_path)
+    req = urlopen(person_URL)
+    per_array = np.asarray(bytearray(req.read()), dtype = 'uint8')
+    person = cv2.imdecode(per_array, cv2.IMREAD_COLOR)
     person_BGR = cv2.cvtColor(person, cv2.COLOR_RGB2BGR)
     dir = 'clothes\\'
     clothes = cv2.imread(dir + random.choice(os.listdir(dir)))
