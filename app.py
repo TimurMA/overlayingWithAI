@@ -3,13 +3,14 @@ from flask_restful import Api, Resource
 from overlaying import overlay
 from json import dumps, loads
 from cv2 import imwrite
+
 app = Flask(__name__)
 api = Api(app)
 
 class API(Resource):
     def post(image_URL):
 
-        output_path = 'D:\Python37\Overlaying\output\output.jpg'
+        output_path = 'output\output.jpg'
         imwrite(output_path, overlay(image_URL))
 
         return loads(dumps({
