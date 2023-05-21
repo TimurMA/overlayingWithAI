@@ -3,12 +3,12 @@ from propotions import scale_image
 from cutting_clothes import cut_top_clothes
 import numpy as np
 import sys
+import os, random
 from propotions import scale_image
 
 
 sys.path.append('D:\\Python37\\openpose\\build\\python\\openpose\\Release')
 import pyopenpose as op
-
 
 params = {
     'model_folder': 'D:\\Python37\\openpose\\models',
@@ -22,38 +22,35 @@ opWrapper = op.WrapperPython()
 opWrapper.configure(params)
 opWrapper.start()
 
-person1 = cv2.imread('D:\Python37\Overlaying\input\image.png', cv2.COLOR_RGB2BGR)
-# person = cv2.equalizeHist(person)
-person2 =  cv2.imread('D:\Python37\Overlaying\input\mattfox100.png', cv2.COLOR_RGB2BGR)
+def get_keypoints(image):
+    datum = op.Datum()
+    datum.cvInputData = image
+    opWrapper.emplaceAndPop(op.VectorDatum([datum]))
+    return datum.poseKeypoints[0][1:9]
 
 
-datum = op.Datum()
-datum.cvInputData = person2
-opWrapper.emplaceAndPop(op.VectorDatum([datum]))
-person2_keypoints = datum.poseKeypoints[0][1:9]
-datum = op.Datum()
-datum.cvInputData = person1
-opWrapper.emplaceAndPop(op.VectorDatum([datum]))
-person1_keypoints = datum.poseKeypoints[0][1:9]
+def overlay(person_path):
 
+    person = cv2.imread(person_path)
+    person_BGR = cv2.cvtColor(person, cv2.COLOR_RGB2BGR)
+    dir = 'clothes\\'
+    clothes = cv2.imread(dir + random.choice(os.listdir(dir)))
+    clothes_BGR = cv2.cvtColor(clothes, cv2.COLOR_RGB2BGR)
 
-target_distance_ox = person1_keypoints[1][0]-person1_keypoints[4][0]
-target_distance_oy = person1_keypoints[0][1]-person1_keypoints[-1][1]
+    person_keypoints = get_keypoints(person_BGR)
+    clothes_keypoints = get_keypoints(clothes_BGR)
 
-scaled_image, scaled_keypoints = scale_image(person2, person2_keypoints, target_distance_ox, target_distance_oy)
-cutted_image = cut_top_clothes(scaled_image, scaled_keypoints, person1_keypoints,
-                 'D:\Python37\Overlaying\output\colored_mask.png', person1.shape[1], person1.shape[0])
-cv2.imwrite('D:\Python37\Overlaying\output\cutted_clothes_clown.png', cutted_image)
-alpha = cutted_image[:,:, 3] / 255.0
-cutted_image = cutted_image[:,:,:3]
-cutted_image = cv2.cvtColor(cutted_image, cv2.COLOR_RGBA2RGB)
+    target_distance_ox = person_keypoints[1][0] - person_keypoints[4][0]
+    target_distance_oy = person_keypoints[0][1] - person_keypoints[-1][1]
+    scaled_image, scaled_keypoints = scale_image(clothes, clothes_keypoints, target_distance_ox, target_distance_oy)
 
-person = cv2.imread('D:\Python37\Overlaying\input\image.png')
+    cutted_image = cut_top_clothes(scaled_image, scaled_keypoints, person_keypoints,
+                 'temp\colored_mask.png', person.shape[1], person.shape[0])
+    alpha = cutted_image[:,:, 3] / 255.0
+    cutted_image = cutted_image[:,:,:3]
+    cutted_image = cv2.cvtColor(cutted_image, cv2.COLOR_RGBA2RGB)
+    
+    composite = cv2.bitwise_and(cutted_image, cutted_image, mask = (alpha > 0).astype(np.uint8))
+    backround_masked = cv2.bitwise_and(person, person, mask = (1 - alpha >0).astype(np.uint8))
 
-
-composite = cv2.bitwise_and(cutted_image, cutted_image, mask = (alpha > 0).astype(np.uint8))
-backround_masked = cv2.bitwise_and(person, person, mask = (1 - alpha >0).astype(np.uint8))
-
-result = cv2.add(composite, backround_masked)
-result_path = 'D:\Python37\Overlaying\output\outputRonaldo.jpg'
-cv2.imwrite(result_path, result)
+    return cv2.add(composite, backround_masked)
