@@ -3,7 +3,7 @@ from flask_restful import Api, Resource
 from overlaying import overlay
 from json import dumps, loads
 from cv2 import imwrite
-
+from os import getcwd
 app = Flask(__name__)
 api = Api(app)
 
@@ -16,7 +16,7 @@ class API(Resource):
         return loads(dumps({
             'name': 'AIPic',
             'type': 'image/jpg',
-            'uri': output_path
+            'uri': getcwd() + '\\' + output_path
         }))
 
 
