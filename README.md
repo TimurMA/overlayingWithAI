@@ -7,5 +7,5 @@ This project is creating for Mobile App - Virtual AI Stylist. Implemented code i
 ### `pyopenpose`
 ### `tensorflow`
 ### `tf_bodypix`
-### `cv2`
+### `opencv`
 ### `flask`
