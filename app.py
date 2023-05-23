@@ -21,25 +21,3 @@ def post():
 
 if __name__ == "__main__": 
     app.run(debug=True)
-
-# class API(Resource):
-#     def post(image_URL):
-
-#         # output_path = 'output\output.jpg'
-#         # imwrite(output_path, overlay(image_URL))
-        
-#         data = request.get_json()
-        
-#         return data
-        
-
-#         # return loads(dumps({
-#         #     'name': 'AIPic',
-#         #     'type': 'image/jpg',
-#         #     'uri': getcwd() + '\\' + output_path
-#         # }))
-
-# api.add_resource(API, '/get-cut-clothes')
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
