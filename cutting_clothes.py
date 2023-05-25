@@ -15,31 +15,23 @@ def predictColoredMask(image):
     return result.get_colored_part_mask(mask)
 
 
-
-
-colors_to_extract_top = [(47, 167, 239), (56, 140, 255), (75, 115, 255), (87, 245, 135), (91, 240, 175), 
-                     (99, 94, 255), (125, 78, 255), (149, 67, 238), (167, 62, 210), (178, 60, 178), (169, 219, 28)]
-
-
-def cut_top_clothes(image, image_keypoints, person_keypoints, output_mask_path:str, width, height):
-    colored_mask = predictColoredMask(image)
+def cut_clothes(clothes, clothes_keypoint, person_keypoint, output_mask_path:str, width, height, colors_to_extract):
+    colored_mask = predictColoredMask(clothes)
     tf.keras.preprocessing.image.save_img(output_mask_path, colored_mask)
     color_mask = cv2.imread(output_mask_path)
 
     new_mask = np.zeros(color_mask.shape[:2], dtype=np.uint8)
-    for color in colors_to_extract_top:
+    for color in colors_to_extract:
         mask = cv2.inRange(color_mask, color, color)
         new_mask = cv2.bitwise_or(new_mask, mask)
 
     alpha_channel = new_mask.copy()
     alpha_channel[alpha_channel>0] = 255
-    image = image.astype(np.uint8)
-    result_cut = cv2.merge((image[:,:,0], image[:,:,1], image[:,:,2], alpha_channel))
+    clothes = clothes.astype(np.uint8)
+    result_cut = cv2.merge((clothes[:,:,0], clothes[:,:,1], clothes[:,:,2], alpha_channel))
 
-    scaled_neck = image_keypoints[0][:2]
-    person1_neck = person_keypoints[0][:2]
-    x = int(person1_neck[0] - scaled_neck[0])
-    y = int(person1_neck[1] - scaled_neck[1])
+    x = int(person_keypoint[0] - clothes_keypoint[0])
+    y = int(person_keypoint[1] - clothes_keypoint[1])
     
     bg_width = width
     bg_height = height
