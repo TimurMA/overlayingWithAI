@@ -3,7 +3,6 @@ from propotions import scale_clothes
 from cutting_clothes import cut_clothes
 import numpy as np
 import sys
-from urllib.request import urlopen
 import os, random
 
 
@@ -39,9 +38,6 @@ def get_keypoints(image):
 
 def overlay():
 
-    # req = urlopen(person_URL)
-    # per_array = np.asarray(bytearray(req.read()), dtype = 'uint8')
-    # person = cv2.imdecode(per_array, cv2.IMREAD_COLOR)
     person = cv2.imread('input\input.jpg')
     person_BGR = cv2.cvtColor(person, cv2.COLOR_RGB2BGR)
     dir_tops = 'tops\\'
@@ -65,7 +61,7 @@ def overlay():
     cutted_top = cut_clothes(scaled_clothes[0], scaled_clothes_keypoints[0][0], person_keypoints[0],
                  'temp\colored_mask_top.png', person.shape[1], person.shape[0], colors_to_extract_top)
     cutted_pants = cut_clothes(scaled_clothes[1], scaled_clothes_keypoints[1][0], person_keypoints[4],
-                 'temp\colored_mask_pants.png', person.shape[1], person.shape[0], colors_to_extract_pants)
+                 'temp\colored_mask_pantsg.png', person.shape[1], person.shape[0], colors_to_extract_pants)
     
     alpha_pants = cutted_pants[:, :, 3] / 255.0
     alpha_top = cutted_top[:,:, 3] / 255.0
@@ -82,7 +78,4 @@ def overlay():
     pasted_pants_image = cv2.add(composite_pants, backround_masked_pants)
     backround_masked_top = cv2.bitwise_and(pasted_pants_image, pasted_pants_image, mask=(1 - alpha_top > 0).astype(np.uint8))
 
-    return cv2.add(composite_top, backround_masked_top)
-
-
-cv2.imwrite('output\output.jpg', overlay())
+    cv2.imwrite('output\output.jpg', cv2.add(composite_top, backround_masked_top))
