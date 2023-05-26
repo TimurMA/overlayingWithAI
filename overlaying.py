@@ -6,11 +6,11 @@ import sys
 import os, random
 
 
-sys.path.append('D:\\Python37\\openpose\\build\\python\\openpose\\Release')
+sys.path.append('C:\\python37\\openpose\\build\\python\\openpose\\Release')
 import pyopenpose as op
 
 params = {
-    'model_folder': 'D:\Python37\openpose\models',
+    'model_folder': 'C:\\python37\\openpose\\models',
     'model_pose': 'BODY_25',
     'number_people_max': 1,
     'net_resolution': '256x128',
