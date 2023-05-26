@@ -10,7 +10,7 @@ app = Flask(__name__)
 api = Api(app)
 
 output_path = 'output/output.jpg'
-@app.route('/output.jpg', methods = ['POST']) 
+@app.route('/output.jpg', methods = ['POST','GET']) 
 def post(): 
     data = request.get_data().decode('ascii')
     input_path = 'input\input.jpg'
@@ -22,10 +22,10 @@ def post():
 
     file_object = io.BytesIO()
     img = Image.open(output_path)
-    img.save(file_object, 'JPG')
+    img.save(file_object, format='jpeg')
     file_object.seek(0)
-    return send_file(file_object, mimetype='image/JPG')
+    send_file(file_object, mimetype='image/JPG')
+    return 'http://localhost:5000/output.jpg'
 
 
-if __name__ == "__main__": 
-    app.run(debug=True, host='0.0.0.0')
+if __name__ == "__main__":     app.run(debug=True, host='0.0.0.0')
