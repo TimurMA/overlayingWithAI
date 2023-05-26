@@ -1,11 +1,10 @@
-from flask import Flask, request, send_file
+from flask import Flask, request
+import requests
 from flask_restful import Api
 from overlaying import overlay
 from cv2 import imwrite, imdecode, IMREAD_COLOR
 from urllib.request import urlopen
 from numpy import asarray
-from PIL import Image
-import io
 app = Flask(__name__)
 api = Api(app)
 
@@ -20,12 +19,17 @@ def post():
     imwrite(input_path, person)
     overlay()
 
-    file_object = io.BytesIO()
-    img = Image.open(output_path)
-    img.save(file_object, format='jpeg')
-    file_object.seek(0)
-    send_file(file_object, mimetype='image/JPG')
-    return 'http://localhost:5000/output.jpg'
+    url = ''
+    files = {
+        'image' : open(output_path, 'rb')
+    }
+    headers = {
+        "Accept": 'application/json',
+        'Content-Type': 'multipart/form-data',
+      }
+    return requests.post(url, headers=headers, files=files)
+
+    
 
 
 if __name__ == "__main__":     app.run(debug=True, host='0.0.0.0')
