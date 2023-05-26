@@ -25,7 +25,7 @@ colors_to_extract_top = [(47, 167, 239), (56, 140, 255), (75, 115, 255), (87, 24
                      (99, 94, 255), (125, 78, 255), (149, 67, 238), (167, 62, 210), (178, 60, 178), (169, 219, 28)]
 
 colors_to_extract_pants = [(96, 247, 96), (115, 243 , 64), (141, 234, 40), (169, 219, 28), 
-                           (194, 199, 26), (213, 176, 33), (224, 125, 65), (224, 150 ,47)]
+                           (194, 199, 26), (213, 176, 33), (224, 125, 65), (224, 150 ,47), (91, 240, 175)]
 
 def get_keypoints(image):
     datum = op.Datum()
@@ -33,11 +33,7 @@ def get_keypoints(image):
     opWrapper.emplaceAndPop(op.VectorDatum([datum]))
     return datum.poseKeypoints[0]
 
-
-
-
 def overlay():
-
     person = cv2.imread('input\input.jpg')
     person_BGR = cv2.cvtColor(person, cv2.COLOR_RGB2BGR)
     dir_tops = 'tops\\'
