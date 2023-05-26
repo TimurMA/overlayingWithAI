@@ -9,29 +9,28 @@ app = Flask(__name__)
 api = Api(app)
 
 output_path = 'output/output.jpg'
+
+url = 'https://virtual-ai-stylist-backend.onrender.com/upload'
+headers = {
+    "Accept": 'application/json',
+}
+
 @app.route('/upload-ai-image', methods = ['POST']) 
 def post(): 
-    # data = request.get_data().decode('ascii')
-    # input_path = 'input\input.jpg'
-    # url = urlopen(data)
-    # per_array = asarray(bytearray(url.read()), dtype = 'uint8')
-    # person = imdecode(per_array, IMREAD_COLOR)
-    # imwrite(input_path, person)
-    # overlay()
+    data = request.get_data().decode('ascii')
+    input_path = 'input\input.jpg'
+    url = urlopen(data)
+    per_array = asarray(bytearray(url.read()), dtype = 'uint8')
+    person = imdecode(per_array, IMREAD_COLOR)
+    imwrite(input_path, person)
+    overlay()
 
-    url = 'https://virtual-ai-stylist-backend.onrender.com/upload'
     files = {
-        'image' : open(output_path, 'rb')
+    'image' : open(output_path, 'rb')
     }
-    headers = {
-        "Accept": 'application/json',
-        # 'Content-Type': 'multipart/form-data',
-      }
-    data = requests.post(url, headers=headers, files=files)
-    link = 'https://virtual-ai-stylist-backend.onrender.com' + data.json()['url']
-    return link
+    link = requests.post(url, headers=headers, files=files).json()['url']
+    print(link)
+    return 'https://virtual-ai-stylist-backend.onrender.com' + link
 
-    
-
-
-if __name__ == "__main__":     app.run(debug=True, host='0.0.0.0')
+if __name__ == "__main__":     
+    app.run(debug=True, host='0.0.0.0')
