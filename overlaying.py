@@ -57,7 +57,7 @@ def overlay():
     cutted_top = cut_clothes(scaled_clothes[0], scaled_clothes_keypoints[0][0], person_keypoints[0],
                  'temp\colored_mask_top.png', person.shape[1], person.shape[0], colors_to_extract_top)
     cutted_pants = cut_clothes(scaled_clothes[1], scaled_clothes_keypoints[1][0], person_keypoints[4],
-                 'temp\colored_mask_pantsg.png', person.shape[1], person.shape[0], colors_to_extract_pants)
+                 'temp\colored_mask_pants.png', person.shape[1], person.shape[0], colors_to_extract_pants)
     
     alpha_pants = cutted_pants[:, :, 3] / 255.0
     alpha_top = cutted_top[:,:, 3] / 255.0
