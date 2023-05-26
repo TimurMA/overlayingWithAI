@@ -9,25 +9,27 @@ app = Flask(__name__)
 api = Api(app)
 
 output_path = 'output/output.jpg'
-@app.route('/output.jpg', methods = ['POST','GET']) 
+@app.route('/upload-ai-image', methods = ['POST']) 
 def post(): 
-    data = request.get_data().decode('ascii')
-    input_path = 'input\input.jpg'
-    url = urlopen(data)
-    per_array = asarray(bytearray(url.read()), dtype = 'uint8')
-    person = imdecode(per_array, IMREAD_COLOR)
-    imwrite(input_path, person)
-    overlay()
+    # data = request.get_data().decode('ascii')
+    # input_path = 'input\input.jpg'
+    # url = urlopen(data)
+    # per_array = asarray(bytearray(url.read()), dtype = 'uint8')
+    # person = imdecode(per_array, IMREAD_COLOR)
+    # imwrite(input_path, person)
+    # overlay()
 
-    url = ''
+    url = 'https://virtual-ai-stylist-backend.onrender.com/upload'
     files = {
         'image' : open(output_path, 'rb')
     }
     headers = {
         "Accept": 'application/json',
-        'Content-Type': 'multipart/form-data',
+        # 'Content-Type': 'multipart/form-data',
       }
-    return requests.post(url, headers=headers, files=files)
+    data = requests.post(url, headers=headers, files=files)
+    link = 'https://virtual-ai-stylist-backend.onrender.com' + data.json()['url']
+    return link
 
     
 
